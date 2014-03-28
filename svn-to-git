@@ -1,0 +1,19 @@
+#!/bin/bash
+
+dir=${1:-sakai}
+
+git clone --single-branch ./repos/sakai.git $dir
+cd $dir
+
+cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1  | \
+while read directory
+  do echo $directory
+  # Samigo doesn't match it's directory and repository name.
+  module=$(echo $directory | sed 's/samigo/sam/')
+  git remote add $module-sakai ../repos/$module.git
+  git fetch $module-sakai trunk
+  git merge -s ours --no-commit $module-sakai/trunk
+  git read-tree --prefix=$directory/ -u $module-sakai/trunk
+  git commit -m "Subtree $module merged"
+done
+git prune

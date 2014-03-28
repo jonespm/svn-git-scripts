@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Get a local copy of all the repos we need for sakai svn to git.
+
+mkdir repos
+cd repos
+svn propget svn:externals https://source.sakaiproject.org/svn/sakai/trunk/ |\
+    grep -v '^#' | tr -s '\n'| cut -d' ' -f1  | \
+    while read directory
+do
+  echo $directory
+  module=$(echo $directory| sed 's/samigo/sam/')
+  git clone --bare https://github.com/sakai-mirror/$module.git
+done
+
+# And the main repo.
+git clone --bare https://github.com/sakai-mirror/sakai.git
