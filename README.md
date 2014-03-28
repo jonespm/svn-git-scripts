@@ -15,4 +15,16 @@ probably shrink the git repository size substantially by removing any file
 from history that doesn't exist in the current checkout.
 
 We may also want to improve the author names used in commit messages as at
-the moment we just use the subversion username with no nice username. 
+the moment we just use the subversion username with no nice username.
+
+There's currently an example of the conversion in https://github.com/buckett/sakai
+
+The read-tree has an issue in that I think it does a move under the hood, so
+prior to the merge of a module there is the pom.xml in master and the pom.xml
+to be merged in (both with the same path), but only after the merge does the
+path for the module get updated. This means a git blame on the pom.xml inside
+the module doesn't work as git can't work out where all the commits came from
+and just shows them as coming from the merge commit. The fix for this is to
+filter the branch before merging in:
+
+http://stackoverflow.com/questions/4042816/how-can-i-rewrite-history-so-that-all-files-are-in-a-subdirectory
