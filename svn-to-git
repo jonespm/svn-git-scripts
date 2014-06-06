@@ -5,8 +5,8 @@ dir=${1:-sakai}
 git clone --single-branch ./repos/sakai.git $dir
 cd $dir
 
-cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1 |sort | \
-head -2 |\
+cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1 |sort|\
+#head -2 |\
 while read directory
   do echo $directory
   # Samigo doesn't match it's directory and repository name.
@@ -23,8 +23,9 @@ fi" -- $module-sakai/trunk
 
   git for-each-ref --format="%(refname)" refs/original/ |\
    xargs -n 1 git update-ref -d
-  git read-tree -u $module-sakai/trunk
-  #git merge -s ours --no-commit $module-sakai/trunk
+  #git read-tree -m -u $module-sakai/trunk
+  #git merge --no-commit $module-sakai/trunk
   #git commit -m "Subtree $module merged"
 done
+
 #git prune
