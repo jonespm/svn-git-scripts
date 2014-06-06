@@ -27,4 +27,13 @@ the module doesn't work as git can't work out where all the commits came from
 and just shows them as coming from the merge commit. The fix for this is to
 filter the branch before merging in:
 
+
 http://stackoverflow.com/questions/4042816/how-can-i-rewrite-history-so-that-all-files-are-in-a-subdirectory
+
+
+== Remove Files ==
+
+git log --pretty=format: --name-status | cut -f2- | sort -u
+git ls-tree -r master --name-only | sort -u
+
+
