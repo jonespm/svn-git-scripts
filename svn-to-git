@@ -13,13 +13,15 @@ while read directory
   module=$(echo $directory | sed 's/samigo/sam/')
   git remote add $module-sakai ../repos/$module.git
   git fetch $module-sakai trunk
+  git branch -f tmp-$module $module-sakai/trunk
   # Re-write history so it always looks like it was in that folder
   # This is slow....
   git filter-branch --prune-empty --tree-filter "
-if [[ ! -e $directory ]]; then
+if [ ! -e $directory ]; then
     mkdir -p $directory
     git ls-tree --name-only \$GIT_COMMIT | xargs -I files mv files $directory
-fi" -- $module-sakai/trunk
+fi" -- tmp-$module
+  git branch -M tmp-$module $module
 
   git for-each-ref --format="%(refname)" refs/original/ |\
    xargs -n 1 git update-ref -d
