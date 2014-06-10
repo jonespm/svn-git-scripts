@@ -2,8 +2,10 @@
 
 dir=${1:-sakai}
 
+prog_dir=$(dirname $(readlink -f $0))
 git clone --single-branch ./repos/sakai.git $dir
 cd $dir
+
 
 cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1 |sort|\
 #head -2 |\
@@ -16,11 +18,7 @@ while read directory
   git branch -f tmp-$module $module-sakai/trunk
   # Re-write history so it always looks like it was in that folder
   # This is slow....
-  git filter-branch --prune-empty --tree-filter "
-if [ ! -e $directory ]; then
-    mkdir -p $directory
-    git ls-tree --name-only \$GIT_COMMIT | xargs -I files mv files $directory
-fi" -- tmp-$module
+  git filter-branch --prune-empty --tree-filter "$prog_dir/move-to-folder $directory" -- tmp-$module
   git branch -M tmp-$module $module
 
   git for-each-ref --format="%(refname)" refs/original/ |\
