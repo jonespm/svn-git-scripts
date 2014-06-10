@@ -1,0 +1,12 @@
+#!/bin/bash -ex
+# This can be called by git-filter-branch to move all the files in a branch to a folder.
+# This copes with the case when the folder already exists
+
+if [ -e "$1" ]; then
+  tmp=$RANDOM-dir
+  mkdir $tmp
+  git ls-tree --name-only $GIT_COMMIT | xargs -I files mv files $tmp
+  mv $tmp "$1"
+else
+  git ls-tree --name-only $GIT_COMMIT | xargs -I files mv files "$1"
+fi
