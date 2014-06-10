@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash 
 # This can be called by git-filter-branch to move all the files in a branch to a folder.
 # This copes with the case when the folder already exists
 
@@ -8,5 +8,6 @@ if [ -e "$1" ]; then
   git ls-tree --name-only $GIT_COMMIT | xargs -I files mv files $tmp
   mv $tmp "$1"
 else
+  mkdir "$1"
   git ls-tree --name-only $GIT_COMMIT | xargs -I files mv files "$1"
 fi
