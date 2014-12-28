@@ -1,9 +1,14 @@
 #!/bin/bash
 
+absdir() {                                               
+  echo "$(cd "$(dirname "$1")" && pwd)/"
+}
+
 dir=${1:-sakai}
 
-prog_dir=$(dirname $(readlink -f $0))
-git clone --single-branch ./repos/sakai.git $dir
+prog_dir=$(absdir $0)
+# Use trunk as we need to merge in a module called master
+git clone --single-branch --branch trunk ./repos/sakai.git $dir
 cd $dir
 
 
