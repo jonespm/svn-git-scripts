@@ -26,7 +26,14 @@ while read directory
   git branch -f tmp-$module $module-sakai/trunk
   # Re-write history so it always looks like it was in that folder
   # This is slow....
-  git filter-branch --prune-empty --tree-filter "$prog_dir/move-to-folder $directory" -- tmp-$module
+  # git filter-branch -f --prune-empty --tree-filter "$prog_dir/move-to-folder $directory" -- tmp-$module
+  # This is much faster as we just mess with the index.
+  git filter-branch -f --index-filter "
+  	git ls-files -s | sed \"s/	/	$module\//\" | 
+	GIT_INDEX_FILE=\$GIT_INDEX_FILE.new git update-index --index-info &&
+	# If nothing changed then the file isn't created so we need to check first
+  	(test -f \$GIT_INDEX_FILE.new && mv \$GIT_INDEX_FILE.new \$GIT_INDEX_FILE; true)
+  " tmp-$module
   # Rename our working branch to be the original
   git branch -M tmp-$module $module
 
