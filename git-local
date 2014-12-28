@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# Fail on errors
+set -e
+
 # Get a local copy of all the repos we need for sakai svn to git.
 # This makes it faster when testing the conversion as all the files needed are
 # already on the local machine.
 
-mkdir repos
+mkdir -p repos
 cd repos
 svn propget svn:externals https://source.sakaiproject.org/svn/sakai/trunk/ |\
     grep -v '^#' | tr -s '\n'| cut -d' ' -f1  | \
@@ -12,8 +15,12 @@ svn propget svn:externals https://source.sakaiproject.org/svn/sakai/trunk/ |\
 do
   echo $directory
   module=$(echo $directory| sed 's/samigo/sam/')
-  git clone --bare https://github.com/sakai-mirror/$module.git
+  if [ \! -d $module.git ]; then
+    git clone --bare https://github.com/sakai-mirror/$module.git
+  fi
 done
 
 # And the main repo.
-git clone --bare https://github.com/sakai-mirror/sakai.git
+if [ ! -d sakai.git ]; then
+  git clone --bare https://github.com/sakai-mirror/sakai.git
+fi
