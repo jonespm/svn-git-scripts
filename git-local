@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Get a local copy of all the repos we need for sakai svn to git.
+# This makes it faster when testing the conversion as all the files needed are
+# already on the local machine.
 
 mkdir repos
 cd repos
