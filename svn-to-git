@@ -32,12 +32,12 @@ while read directory
   # Create a branch todo work on based on the trunk branch from the remote
   git branch -f tmp-$module $module-sakai/trunk
   # List of all files no longer related to current checkout
-  comm -23 \
-	<(git log --pretty=format: --name-only --diff-filter=A tmp-$module | sort -u) \
-	<(git ls-tree  -r --name-only tmp-$module | xargs -n 1 git blame -f tmp-$module --  | awk '{print $2;}' | sort -u ) \
-	>$TMPFILE 
+  #comm -23 \
+  #	<(git log --pretty=format: --name-only --diff-filter=A tmp-$module | sort -u) \
+  #	<(git ls-tree  -r --name-only tmp-$module | xargs -n 1 git blame -f tmp-$module --  | awk '{print $2;}' | sort -u ) \
+  #	>$TMPFILE 
   # Remove all those files from commits
-  git filter-branch -f --index-filter 'cat $TMPFILE | xargs git rm -f --cached --ignore-unmatch > /dev/null' --prune-empty -- tmp-$module
+  # git filter-branch -f --index-filter 'cat $TMPFILE | xargs git rm -f --cached --ignore-unmatch > /dev/null' --prune-empty -- tmp-$module
   # Re-write history so it always looks like it was in that folder
   # This is slow....
   # git filter-branch -f --prune-empty --tree-filter "$prog_dir/move-to-folder $directory" -- tmp-$module
