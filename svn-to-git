@@ -19,8 +19,9 @@ export TMPFILE=`mktemp /tmp/$(basename $0).XXXXXX` || exit 1
 
 
 cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1 |sort|\
-#head -2 |\
-#grep basiclti |\
+grep -v metaobj |\
+grep -v warehouse |\
+grep -v osp |\
 while read directory
   do echo $directory
   # Was used when some modules didn't map to directories
