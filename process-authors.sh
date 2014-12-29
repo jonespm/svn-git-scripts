@@ -28,7 +28,7 @@ awk -F" = " '{
 }'
 
 cat <<EOF
-' --tag-name-filter cat --original authors -- $1
+' --tag-name-filter cat --original authors -- \$1
 EOF
 
 
