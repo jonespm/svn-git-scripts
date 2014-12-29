@@ -23,8 +23,8 @@ cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1 |sort|\
 #grep basiclti |\
 while read directory
   do echo $directory
-  # Samigo doesn't match it's directory and repository name.
-  module=$(echo $directory | sed 's/samigo/sam/')
+  # Was used when some modules didn't map to directories
+  module=$directory
   # Add a remote for the submodule
   git remote add $module-sakai ../repos/$module.git
   # Fetch the trunk branch from the remote
