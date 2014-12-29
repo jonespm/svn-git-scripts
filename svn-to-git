@@ -8,17 +8,19 @@ absdir() {
 }
 
 dir=${1:-sakai}
-
 prog_dir=$(absdir $0)
+
 # Use trunk as we need to merge in a module called master
 git clone --single-branch --branch trunk ./repos/sakai.git $dir
 cd $dir
+$prog_dir/update-authors.sh trunk
 
 export TMPFILE=`mktemp /tmp/$(basename $0).XXXXXX` || exit 1
 
 
 cat .externals| grep -v '^#' | tr -s '\n'| cut -d' ' -f1 |sort|\
 #head -2 |\
+#grep basiclti |\
 while read directory
   do echo $directory
   # Samigo doesn't match it's directory and repository name.
@@ -46,14 +48,14 @@ while read directory
 	# If nothing changed then the file isn't created so we need to check first
   	(test -f \$GIT_INDEX_FILE.new && mv \$GIT_INDEX_FILE.new \$GIT_INDEX_FILE; true)
   " tmp-$module
+  $prog_dir/update-authors.sh tmp-$module
   # Rename our working branch to be the original
   git branch -M tmp-$module $module
 
   git for-each-ref --format="%(refname)" refs/original/ |\
    xargs -n 1 git update-ref -d
-  #git read-tree -m -u $module-sakai/trunk
-  #git merge --no-commit $module-sakai/trunk
-  #git commit -m "Subtree $module merged"
+  git merge --no-commit $module
+  git commit -m "Subtree $module merged"
 done
 
 #git prune
