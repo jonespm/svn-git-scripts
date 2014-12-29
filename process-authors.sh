@@ -7,6 +7,7 @@ cat <<EOF
 #!/bin/sh
  
 git filter-branch --env-filter '
+GIT_COMMITTER_EMAIL="\${GIT_COMMITTER_EMAIL/@????????-????-*/}"
 EOF
 
 # Contains lines like: a.fish@lancaster.ac.uk = Adrian Fish <a.fish@lancaster.ac.uk>
@@ -19,13 +20,15 @@ awk -F" = " '{
  name=details[1]
  print "if [ \"\$GIT_COMMITTER_EMAIL\" = \"" $1 "\" ]"
  print "then"
- print "  export GIT_COMMITER_NAME=\"" name "\""
- print "  export GIT_COMMITER_EMAIL=\"" email "\""
+ print "  export GIT_COMMITTER_NAME=\"" name "\""
+ print "  export GIT_COMMITTER_EMAIL=\"" email "\""
+ print "  export GIT_AUTHOR_NAME=\"" name "\""
+ print "  export GIT_AUTHOR_EMAIL=\"" email "\""
  print "fi"
 }'
 
 cat <<EOF
-' --tag-name-filter cat -- --branches
+' --tag-name-filter cat --original authors -- $1
 EOF
 
 
