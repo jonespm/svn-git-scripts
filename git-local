@@ -16,11 +16,11 @@ do
   echo $directory
   module=$(echo $directory| sed 's/samigo/sam/')
   if [ \! -d $module.git ]; then
-    git clone --bare https://github.com/sakai-mirror/$module.git
+    git clone --mirror https://github.com/sakai-mirror/$module.git
   fi
 done
 
 # And the main repo.
 if [ ! -d sakai.git ]; then
-  git clone --bare https://github.com/sakai-mirror/sakai.git
+  git clone --mirror https://github.com/sakai-mirror/sakai.git
 fi
