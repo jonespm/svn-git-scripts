@@ -44,7 +44,7 @@ while read directory
   # git filter-branch -f --prune-empty --tree-filter "$prog_dir/move-to-folder $directory" -- tmp-$module
   # This is much faster as we just mess with the index.
   git filter-branch -f --index-filter "
-  	git ls-files -s | sed \"s/	/	$module\//\" | 
+  	git ls-files -s | sed \"s/	/	$directory\//\" | 
 	GIT_INDEX_FILE=\$GIT_INDEX_FILE.new git update-index --index-info &&
 	# If nothing changed then the file isn't created so we need to check first
   	(test -f \$GIT_INDEX_FILE.new && mv \$GIT_INDEX_FILE.new \$GIT_INDEX_FILE; true)
